@@ -41,6 +41,40 @@
   font-weight: 600;
 }
 
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(139, 195, 74, 0.2);
+}
+
+.admin-tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  color: #5a6a5a;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.admin-tab:hover {
+  color: #2e4a2e;
+  background-color: rgba(139, 195, 74, 0.1);
+}
+
+.admin-tab.active {
+  color: #2e4a2e;
+  border-bottom-color: #8bc34a;
+  background-color: rgba(139, 195, 74, 0.05);
+}
+
+.tab-content {
+  margin-top: 1rem;
+}
+
 .logout-btn {
   padding: 0.5rem 1.5rem;
   background-color: #ef4444;

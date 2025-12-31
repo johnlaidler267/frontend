@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import BookingForm from './components/BookingForm';
 import AdminDashboard from './components/AdminDashboard';
 import NewsletterSignup from './components/NewsletterSignup';
+import Store, { StoreSuccess, StoreCancel } from './components/Store';
 import './App.css';
 
 function Home() {
@@ -66,6 +67,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/book" element={<BookingForm />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/store/:id" element={<Store />} />
+          <Route path="/store/success" element={<StoreSuccess />} />
+          <Route path="/store/cancel" element={<StoreCancel />} />
         </Routes>
       </Layout>
     </Router>

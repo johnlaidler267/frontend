@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import NewsletterEditor from './NewsletterEditor';
+import ProductManagement from './ProductManagement';
 import './AdminDashboard.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -7,6 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [activeTab, setActiveTab] = useState('appointments');
   const [appointments, setAppointments] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -184,98 +187,135 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
-
-        <div className="dashboard-controls">
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="Search appointments..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="filter-box">
-            <label>Filter by Status:</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="all">All</option>
-              <option value="pending">Pending</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
-          <button className="refresh-btn" onClick={fetchAppointments}>
-            Refresh
+        <div className="admin-tabs">
+          <button
+            className={activeTab === 'appointments' ? 'admin-tab active' : 'admin-tab'}
+            onClick={() => setActiveTab('appointments')}
+          >
+            Appointments
+          </button>
+          <button
+            className={activeTab === 'newsletter' ? 'admin-tab active' : 'admin-tab'}
+            onClick={() => setActiveTab('newsletter')}
+          >
+            Newsletter
+          </button>
+          <button
+            className={activeTab === 'products' ? 'admin-tab active' : 'admin-tab'}
+            onClick={() => setActiveTab('products')}
+          >
+            Products
           </button>
         </div>
 
-        {loading ? (
-          <div className="loading">Loading appointments...</div>
-        ) : filteredAppointments.length === 0 ? (
-          <div className="no-appointments">No appointments found.</div>
-        ) : (
-          <div className="appointments-table-container">
-            <table className="appointments-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Service</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Address</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAppointments.map(appointment => (
-                  <tr key={appointment.id}>
-                    <td>{appointment.id}</td>
-                    <td>{appointment.name}</td>
-                    <td>{appointment.email}</td>
-                    <td>{appointment.phone}</td>
-                    <td>{appointment.service_type}</td>
-                    <td>{new Date(appointment.date).toLocaleDateString()}</td>
-                    <td>{appointment.time}</td>
-                    <td className="address-cell">{appointment.address}</td>
-                    <td>
-                      <select
-                        value={appointment.status}
-                        onChange={(e) => updateStatus(appointment.id, e.target.value)}
-                        style={{ 
-                          backgroundColor: getStatusColor(appointment.status),
-                          color: 'white',
-                          border: 'none',
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button
-                        className="delete-btn"
-                        onClick={() => deleteAppointment(appointment.id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {activeTab === 'appointments' && (
+          <div className="tab-content">
+            {error && <div className="alert alert-error">{error}</div>}
+
+            <div className="dashboard-controls">
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="Search appointments..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div className="filter-box">
+                <label>Filter by Status:</label>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="all">All</option>
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+              <button className="refresh-btn" onClick={fetchAppointments}>
+                Refresh
+              </button>
+            </div>
+
+            {loading ? (
+              <div className="loading">Loading appointments...</div>
+            ) : filteredAppointments.length === 0 ? (
+              <div className="no-appointments">No appointments found.</div>
+            ) : (
+              <div className="appointments-table-container">
+                <table className="appointments-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Service</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Address</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAppointments.map(appointment => (
+                      <tr key={appointment.id}>
+                        <td>{appointment.id}</td>
+                        <td>{appointment.name}</td>
+                        <td>{appointment.email}</td>
+                        <td>{appointment.phone}</td>
+                        <td>{appointment.service_type}</td>
+                        <td>{new Date(appointment.date).toLocaleDateString()}</td>
+                        <td>{appointment.time}</td>
+                        <td className="address-cell">{appointment.address}</td>
+                        <td>
+                          <select
+                            value={appointment.status}
+                            onChange={(e) => updateStatus(appointment.id, e.target.value)}
+                            style={{ 
+                              backgroundColor: getStatusColor(appointment.status),
+                              color: 'white',
+                              border: 'none',
+                              padding: '4px 8px',
+                              borderRadius: '4px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                        </td>
+                        <td>
+                          <button
+                            className="delete-btn"
+                            onClick={() => deleteAppointment(appointment.id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'newsletter' && (
+          <div className="tab-content">
+            <NewsletterEditor />
+          </div>
+        )}
+
+        {activeTab === 'products' && (
+          <div className="tab-content">
+            <ProductManagement />
           </div>
         )}
       </div>

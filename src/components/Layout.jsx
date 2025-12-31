@@ -26,6 +26,12 @@ const Layout = ({ children }) => {
               Book Appointment
             </Link>
             <Link 
+              to="/store" 
+              className={location.pathname.startsWith('/store') ? 'nav-link active' : 'nav-link'}
+            >
+              Store
+            </Link>
+            <Link 
               to="/admin" 
               className={location.pathname === '/admin' ? 'nav-link active' : 'nav-link'}
             >
